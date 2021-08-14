@@ -1,0 +1,36 @@
+Introduction
+
+
+Linear and DNN models
+The ideal decision boundary of cat vs non cat is defined by the relationship between pixels. 
+
+Convolutional Neural Networks
+
+The Larger the size of the kernel, the smaller the output of the convolution layers
+
+Add smaller filters while adding more convolutional layers. Strides of a kernel is usually set to 
+smaller than the size of the kernels. 
+
+Dealing with Data Scarcity
+
+For a Linear Model, the number of parameters is: Height * Width * NClasses + NCLASSES
+
+Common Image Augmentation Techniques:
+    - Blur
+    - Resize
+    - Sharpen
+    - Crop
+    - Flip
+    - Rotate
+    - Change Hue, Brightness or Contrast
+
+For Transfer Learning:
+    - Cut the layers at the output. 
+    - If dataset is small, then do not update the weight of the network, else update the weights
+    of the original network. 
+
+
+Going Deeper Faster
+
+Pre-built models
+

@@ -1,0 +1,116 @@
+The Art of ML: 
+
+L1 regularization is sparse and can be used for feature selection. 
+
+More the regularization rate (lambda), more will be the penalty on the weights. 
+
+We use the L2 Norm to simplify the calculation of derivatives.
+
+Default Learning Rate in Estimator's Linear Regressor is smaller of 0.2 or 1/sqrt(num_features). 
+
+The Batch size controls the number of samples that gradient is calculated on. If too small, then 
+training will bounce around. If too large, then the training will take a very long time 
+(40-100 is optimum). 
+
+Adam and ftrl are the default learning rates. 
+
+
+Hyperparameter Tuning:
+
+At a low learning rate, improvement is linear but we often don't get the best possible performance. 
+At a High Learning rate, there is an exponential improvement at first, but we often don't find the 
+best possible performance. 
+At a very high learning rate, we can get completely lost. 
+
+A Pinch of Science:
+
+Feature Crosses lead to lots of input nodes, so having zero weights is especially important. Hence 
+comes the need for regularization.
+
+LO-norm whic is the count of non-zero weights is an NP-hard, non-convex optimization problem. There
+will be many local peaks and valleys. We preety much have to start with lots and lots of starting
+points of gradient decent making an NPHard problem to solve completely. 
+
+L1 Norm (sum of absolute values of the weights) is convex and efficient and tends 
+to encourage sparsity in the model.
+
+The L2 Norm provides more generalizable model than the L1 norm, but however we will end up with
+much more complex heavy models if we use L2 inplace of using L1. This happens because often 
+features will have high correlation among each other and L1 regularization will chose one feature
+while discarding the others. While L2 regularization will keep both features and keep their
+weight magnitudes small. 
+
+Elastic nets combine the feeature selection of L1 regularization with the the generalizability
+of L2 regularization. The only tradeoff is that there are two and not just one hyperparameters to
+tune for the two different lambda regularization parameters.
+
+
+The Science of Neural Network:
+
+The Hidden Layers do not make the model Non Linear unless we add activation functions. 
+
+To Increase Hidden Dimensions, we can add neurons.To Increase Function Composition, we can use Layers
+and to use Multiple Labels per example, we can use Outputs. 
+
+A good Advice if my model is experiencing exploding gradients are: 
+    - Lower the Learning Rate
+    - Add weight regularization
+    - Add Gradient Clipping
+    - Add Batch Normalization
+
+
+
+For our Classification output, if we have both mutually exclusive labels and probabilities, we should
+use tf.nn.softmax_cross_entropy_with_logits_v2. If the labels are mutually exclusive, but the 
+probabilities aren'tmutually exclusive, we should use tf.nn.sparse_softmax_cross_entropy_with_logits.
+If our labels aren't mutually exclusive, we should use tf.nn.sigmoid_cross_entropy_with_logits. 
+
+Embeddings:
+
+Embeddings helps us to:
+    - Manage Sparse Data
+    - Reduce Dimensionality
+    - Increase Model Generalizations
+    - Cluster Observations
+
+The weights in the embedding column are learned from the data. The model learns how to embed the 
+feature cross in lower-dimension space. 
+
+By Adding More dimensions, we can create finer and finer distinctions and sometimes these finer 
+distinctions can translate into better recommendation. 
+
+For Recommendations, A d-dimensional embedding assumes that user interest in movies can be approximated by d aspects. Hence
+each input is reduced to a d-dimesional point. 
+
+It's easier to train a model with d inputs than a model with N inputs, where N>>d. 
+
+Dense representations are inefficient in space and compute. Hence it would be great if we can store 
+the data in a sparse manner. 
+
+We need to efficiently represent the sparse vector as just the movies the user has watched. Hence we 
+build a dictionary mapping each feature to an integer from 0,..movies - 1. 
+
+If we know the keys beforehand:
+tf.feature_columns.categorical_column_with_vocabulory_list('employeeId',
+vocabulory_list=['8345','72345','87654','98723','23451'])
+
+If your data is already indexed; i.e., it has integers in [0-N]:
+tf.feature_column.categorical_column_with_identity('employeeId', num_buckets=5)
+
+If you don't have a vocabulory of all possible values:
+tf.feature_column.categorical_column_with_hash_bucket('employeeId',hash_bucket_size=500)
+
+Code to create an embedded feature column in tensorflow:
+sparse_movie=layers.sparse_column_with_keys('movieId',keys=[...])
+embedded_movie=layers.embedding_column(sparse_movie,100)
+
+Embeddings are feature columns that function like layers. In the following code, we use 3 
+Dimensional Embedding:
+
+sparse_word=fc.cateforical_column_with_vocabulory_list('word',vocabulory_list=engishWords)
+embedded_word=fc.embedding_column(sparse_word,3)
+
+The weights in the embedding layer are learned through backprop just as with other weights. 
+
+
+ 

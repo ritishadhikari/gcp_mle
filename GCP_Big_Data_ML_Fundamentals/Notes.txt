@@ -1,0 +1,194 @@
+In Cloud Computing, Compute and Storage are important. Compute through the VM, store it in the Storage
+or in databases. 
+
+gsutil syntax: gsutil mb -p [PROJECT_NAME] -c [STORAGE_CLASS] -l [BUCKET_LOCATION] gs://bucket_name
+
+Suit of BigData Products on GCP: 
+
+- Storage: 
+    - Cloud Storage
+    - Cloud SQL
+    - Cloud Spanner
+    - Cloud DataStore
+    - Cloud BigTable
+- Ingestion:
+    - Compute Engine
+    - Kubernetes Engine
+    - Cloud Dataflow
+    - Cloud Composer
+    - Cloud Pub/Sub
+    - Cloud Functions
+- Analytics
+    - BigQuery
+    - Cloud DataProc
+    - Cloud Datalab
+- Machine Learning
+    - Cloud TPU
+    - Cloud ML
+    - Tensorflow
+    - Cloud AutoML
+    - ML APIs
+Serving
+    - Data Studio
+    - Dialoglow
+    - App Engine
+
+#Cloud Data Proc
+
+Cloud Dataproc Provides the following benefits:
+    - Hadoop without cluster management
+    - Lift-and-shift existing Hadoop workloads (hdfs:// --> gs://)
+    - Connect with Cloud Storage to separate compute and storage
+    - Re-size cluster effortlessly. Preemptible VMs for Cost Savings. 
+
+Cloud Dataproc Autoscaling (alpha) provides flexible capacity. Autoscaling is based on Hadoop YARN
+Metrics. We cannot store data on the clusters, incase they are removed. Hence we store the data
+either on Cloud Storage, Cloud Bigtable or Google BigQuery.  
+
+We can also incorporate Preemtible VMs in our cluster architecture, which are suitable for batch
+jobs and fault tolerant workloads. 
+
+With Petabyte Bisectional Bandwidth, the communication is so fast, it no longer makes sense to 
+transfer the files and store them locally. Instead it makes sense to use the data from where it is 
+stored. 
+
+HDFS is used on the clusters only for the working storage, but we will store all the actual input and 
+output data on google cloud storage. Because the input and the output data is off the cluster, the 
+cluster can be created for a single job and can be shut down when not in use.
+
+We can also store our data by connecting it to Cloud Bigtable and Cloud BigQuery (Off cluster storage)
+
+# BigQuery
+
+BigQuery:
+    - Petabyte-scale fully-managed data warehouse.
+    - Serverless
+    - Has felexible pricing Model
+    - Data Encryption and Security
+    - Geospatial data types amd Functions
+    - Foundation for BI and AI 
+
+
+BigQuery is two services in one:
+    - Fast SQL Query Engine
+    - Managed Storage for Datasets
+
+Bigquery stores collosus amount of data by shrinking the columns. The Query services
+can be accessed through: 
+    - Web UI
+    - bq
+    - REST API which are supported by 7 languages
+Bigquery can access data from csv files in cloud storage as well as from google sheets. 
+ 
+Streaming Data Allows to query data without waiting for a full batch load. 
+The Max Row Size for Streaming Inserts is 1 MB. The maximum throughput is 100000 records
+per seconds per project. 
+
+Bigquery Natively Supports Arrays as data types. This mitigates the overload of joins from 
+different tables. We can use structs(event.status, pickup.longitude) and arrays for consolidated  
+reporting. 
+
+BigQuery ML Cheatsheet:
+    - Label: Alias a column as 'label' or specify column in Options using input_label_cols
+    - Feature: Passed through to the model as part of your SQL SELECT statement
+        - SELECT * FROM ML.FEATURE_INFO(MODEL `mydataset.mymodel`)
+    - Model: An object created in BigQuery that resides in your BigQuery Datasets
+    - Model Types: Linear Regression, Logistic Regression
+        - CREATE OR REPLACE MODEL <dataset>.<name>
+          OPTIONS(model_type='<type>') AS <training dataset>
+    - Training Progress: SELECT * FROM ML.TRAINING_INFO(MODEL `mydataset.mymodel`)
+    - Inspect Weights: SELECT * FROM ML.WEIGHTS(MODEL `mydataset.mymodel`, (<query>))
+    - Evaluation: SELECT * FROM ML.EVALUATE(MODEL `mydataset.mymodel`)
+    - Prediction: SELECT * FROM ML.PREDICT(MODEL `mydataset.mymodel`,(<query>))
+    
+
+#Realtime IOT Dashboard
+
+IOT Devices present new challenges to data ingestion:
+    - Data Streaming from various pipelines
+    - Distributing event notifications (ex: new user sign up)
+    - Scale to handle volume
+    - Reliable (no duplicates)
+
+Pub/Sub offers reliable, real-time messaging:
+    - At-least-once delivery
+    - No Provisioning, auto-everything
+    - Open APIs
+    - Global by default
+    - End-to-end Encryption
+    
+
+Apache Beam is an advanced unified & portable data processing programming model 
+    - It is a Programming Model
+    - SDKs for writing data pipelines
+    - Runners to run distributed processing
+
+Apache Beam is:
+    - Unified: Use a single programming model for batch and streaming use cases
+    - Portable: Execute Pipelines on Multiple execution environments
+    - Extensible: Write and share new SDKs, IO Connectors and transformation libraries. 
+
+Cloud Dataflow is one  of the popular choices for running Apache Beam as the engine. 
+    - Very little maintenance overhead is involved
+    - Built on Google's reliable infrastructure
+    - Scaling is handled through Autoscale workers
+    - Monitoring and Alert is integrated through Google Cloud Operations
+    - We can run Apache Beam elsewhere so no need to be locked in to a vendor. 
+
+Services provided by Cloud Dataflow are:
+    - Graph Optimization
+    - Work Scheduler
+    - Auto Scaler
+    - Dynamic Work Rebalancer
+    - Intelligent Watermarking
+    - Auto-Healing
+    - Monitoring
+    - Log Collection
+
+
+Custom Models in GCP:
+    Cloud Speech to Text: Converts Audio to Text for Data processing
+    Cloud Natural Language API: Recognizes Parts of Speech, called
+    entities and sentiment. 
+    Cloud Translation: Converts Text in one language to another. 
+    Dialogueflow Enterprise Edition: Build Chatbots to conduct
+    conversations. 
+    Cloud Text to Speech: Converts text to high quality voice audio. 
+    Cloud Vision API: Working with and recognizing contents in still
+    images.
+    Cloud Video Intelligence API: Recognizing motion and action in 
+    Video. 
+ 
+AutoML Vision and Vision API differences:
+    - Objective: 
+        AutoML Vision API: Enabling developers with no ML expertise to build state of the art 
+        ML models for images. 
+        Vision API: Enable ML Practitioners to harness power of Google's ML for images
+    - Primary Use Case: 
+        AutoML Vision API: Classification 
+        Vision API: Face Detection, OCR, Object Detection, etc
+    - Data Requirements: 
+        AutoML Vision API: Images with Labelled Data 
+        Vision API: Just Images (may or may not require labelles Data)
+    - Output Format: 
+        AutoML Vision API: Labels with probability 
+        Vision API: As per the problem
+    - Custom Requirements: 
+        AutoML Vision API: Can't be customized 
+        Vision API: Can be used for any custom made solutions
+    - Efforts: 
+        AutoML Vision API: Low for Solution Designing 
+        Vision API: High for end to end model development
+    - Status: 
+        AutoML Vision API: Publicly Available 
+        Vision API: Publicly Available
+    
+    
+        
+    
+    
+
+
+
+
+

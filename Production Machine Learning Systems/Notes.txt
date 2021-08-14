@@ -1,0 +1,220 @@
+I. Architecting Production ML Systems:
+
+Data Ingestion:
+
+For Streaming Data use PubSUb
+For Structured Data use BigQuery
+For Transforming Data for training which we can train on later, we can use Cloud Storage. 
+
+
+Data Analysis and Validation:
+Tools used are Datalab, Data Studio and Cloud Reliability. 
+
+Data Transformation: 
+If Not done correctly, then it will lead to training serving skew. 
+
+Trainer: 
+It is responsible for training our model. Should support data parralellism and model parrallelism and 
+should be able to support many number of workers. 
+
+Trainer should also support HyperParameter Tuning. MLEngine and GKE(Kubeflow)
+
+Tuner: 
+
+Model Evaluation and Validation: 
+TFX Model Analysis.
+
+Serving: 
+Low Latency, Highly Eficiently and Scale Horizontally, Reliable and Robust and Easy to Update
+Versions.
+ML Engine and TF Serving (GKE)
+
+Logging:
+Cloud Reliabilty. 
+
+Shared Configuration Framework and Job Orchestration through Cloud Composer (Managed Apache Airflow) 
+and Argo(GKE).
+
+Steps to compose a Workflow in Cloud Composer:
+    -  Define the Ops
+    - Arrange into a DAG
+    - Upload the DAG to the environment
+    - Explore the DAG Run in Web UI. 
+
+Static Vs Dynamic Training:
+    - Static Training: Trainined Once, offline
+      Dynamic Training: Add Training Data over Time
+    - Static Training: Easy to Build and Test
+      Dynamic Training: Engineering is harder. Have to do progressive validation. 
+    - Static Training: Easy to let become stale
+      Dynamic Training: Regular Sync Out. Updated version. Will adapt to change.
+
+Three Potential Architectures for Dynamic Training:
+    - Cloud Functions (For Asynchronous Training Jobs)
+    - App Engine (for user-triggered training jobs)
+    - Cloud Dataflow (for Continous Training)
+
+Reference Architecture for Dynamic Training through Cloud Function:
+    - New File in Cloud Storage
+    - Cloud Function Launched
+    - Start Cloud MLE training job
+    - MLE writes new model
+
+Dataflow can be used for continous Training:
+    - Messages into Pub/SUb
+    - Messages aggregated with Dataflow
+    - Aggregated data is stored into BigQuery
+    - Cloud MLE launched on new data in BigQuery
+    - Updated Model is deployed
+
+
+Static Vs Dynamic Serving:
+    - Static Serving: Higher Storage Cost
+      Dynamic Serving: Lower Storage Cost
+    - Static Serving: Low, Fixed Latency
+      Dynamic Serving: Variable Latency. 
+    - Static Serving: Lower Maintenance
+      Dynamic Serving: Higher Maintenance.
+    - Static Serving: Space Intensive
+      Dynamic Serving: Compute Intensive.
+
+Peakedness is how concentrated the distribution is. 
+
+Cardinality is the number of values in the set. 
+
+When Cardinality is very low w.r.t. any value of Peakedness, we can use static serving. 
+
+When the cardinality is high since the size of the input space is large, and the workload is not very
+peaked, we would want to use dynamic training. 
+
+For High Peaked and high Cardinality we would opt for Hybrid Inference approach.
+
+Architecting a Static Serving Model:
+    - Change Cloud MLE from Online to batch Prediction Job
+    - Model accepts nd passes keys as input
+    - Write predictions to a data warehouse (eg. BigQuery)
+
+II. Ingesting Data for Cloud Based analytics and ML
+
+Migration Methods:
+  - Where is your data: On-Premise with a Good Network
+    Data Transfer Options: Online Transfers
+    Where to store your data: Content Storafe and Delivery- Multi-Regional Cloud Storage
+  - Where is your data: On-Premise with Bad Network or PB+ of Data
+    Data Transfer Options: Transfer Appliances
+    Where to store your data: Analytics & Machine Learning- Cloud MLE, BigQuery, Genomics, 
+    Regional Cloud Storage
+  - Where is your data: Region to Region, Other Clouds
+    Data Transfer Options: Cloud-2-Cloud Transfer Service
+    Where to store your data: Backup & Archival- Nearline Cold Storage
+  - Where is your data: DBs; data warehouse; market data; SaaS data
+    Data Transfer Options: BigQuery Transfer Service
+    Where to store your data: Backup & Archival- BigQuery, Compute Engine
+
+Transfer Appliance is a rackable high capacity Storage Server from Google. Once received, we 
+can load data in our own data center under transfer appliance and ship the data into GCP. Each 
+Appliance can hold upto 1PB. Recommended for data above 60 TB. 
+
+BigQuery Data Transfer Service is a fully managed data import service for Google BigQuery. 
+
+Migrate Hadoop and HDFS to Cloud Dataproc. 
+
+
+III. Designing Adaptable ML Systems
+
+Extrapolation: Means to generalize outside the bounds of what we have previously seen. 
+Intrapolation means to generalize within the bounds of what we have previously seen. 
+
+Data Leakage: Model has learnt to use a feature which could not be actually known and cannot be 
+plausibly related to the label (Hospital name in Training Data but empty string in Testing
+while predicting cancer)
+
+IV. Designing High Performance ML Systems
+
+Tuning Performance to reduce training time, reduce cost and increase scale. 
+
+Constraints:
+	- Input/Output Constraints: Large Inputs; Input requires parsing small models. 
+	  Take Action: Store Efficiently. Parallelize reads. Consider batch size. 
+	- CPU: Expensive computations underpowered hardware.
+	  Take Action: Train on faster accelarator. Upgrade Processor. Run on TPUs. Simplify the model. 
+	- Memory: Large number of inputs; Complex model.
+	  Take Action: Add more memory, Use fewer layers. Reduce batch size. 
+
+
+Machine Learning gets complex quickly. 
+
+Heterogenous systems require our code to work anywhere - CPU, GPU or TPU, Phone, Edge TPU, Raspberry Pi. 
+
+Deeplearning works because datasets are large, but the compute required keeps increasing. 
+
+There are two approaches to Data Parallelism:
+	- Async Parameter: Should be preferred when there are large number of not so powerful or unreliable workers such
+	like clusters of TPUs. Use this approach if we are constrained by I/O.
+	- Sync Allreduce: Fast Devices with strong TPU links, such as fast devices. Better for Multiple GPUs. Use this approach if we are
+	Constrained by Compute Power
+
+Reading Data into Tensorflow:
+	- Directly feed from Python (slowest)
+	- Native Tensorflow Ops (slower)
+	- Read transformed tf records (fastest). 
+
+Training with Estimator API:
+
+############# No need to specify the GPUs ###############
+distribution=tf.contrib.distribute.MirroredStrategy()
+
+run_config=tf.estimator.RunConfig(train_distribute=distribution)
+
+classifier=tf.estimator.Estimator(model_fn=model_function, model_dir=model_dir,config=run_config)
+
+classifier.train(input_fn=input_function)
+
+##########################################################
+
+
+With Mirrored Strategy, there is:
+	- No change to the model or training loop
+	- No Change to input function (requires tf.data.Dataset)
+	- Checkpoints and summaries are seamless
+	
+	
+Estimator Contains the implementation of three functions:
+	- Training
+	- Evaluation
+	- Serving 
+
+Estimator by encapsulating details about sessions and graphs, it also supports exporting the model for serving.  
+
+Implementation Options for Serving:
+	- REST/HTTP API: For straming pipelines
+	- Cloud Machine Learning Engine: For Batch Pipelines
+	- Coud Dataflow: For Batch and Streaming Pipelines
+	
+For Batch Pipelines: 
+	- CMLE Batch > Saved Model > TF Serving  (in terms of fast)
+
+TF Serving is the most maintainable and not as fast. CMLE (Cloud Machine Learning Engine) Batch is the best option for batch prediction.
+
+For Streaming Pipleines:
+ - SavedModel>CMLE+MicroBatching>CMLE
+
+V. Hybrid ML Systems
+
+Kubernetes minimizes infrastructure management. 
+
+Kubeflow enables hybrid machine learning. It is a open source machine learning stack built on Kubernetes. 
+
+In order to build hybrid ML systems that work well on premise and in the cloud, our ML framework needs to support three things:
+	- Composability: 
+	            It is about the ability to compose a bunch of microservices togather. 
+	- Portability: From Experimentation to Training to the Cloud.
+	- Scalability: More Accelarators, CPUs, more disk/networking, more teams, skillsets etc. 
+	
+Kubeflow mission is to make it easy for everyone to Develop, Deploy and Manage portable, distributable ML on kubernetes. 
+
+Tensorflow Lite:
+ - Reduced Code Footprint
+ - Quantization
+ - Lower Precision Arithmetic
+

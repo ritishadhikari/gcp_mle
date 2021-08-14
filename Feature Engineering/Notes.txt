@@ -1,0 +1,65 @@
+Feature Engineering is the process of transforming raw data into features that better represent the underlying 
+problem to the predictive models, resulting in improved model accuracy on unseen data. 
+
+What makes a Good Feature:
+    - Be related to the objective
+    - Be known at prediction time
+    - Be numeric with meaningful magnitude
+    - Have enough examples
+    - Bring human insight to problem
+
+Feature definitions should not change over time. 
+
+Hash Bucketing is used, if we do not have a vocabulory of all possible values.
+tf.feature_column.categorical_column_with_hash_bucket(key='employeeId',hash_bucket_size=500)
+
+If your data is already indexed, i.e., has integers in [0-N]:
+tf.feature_column.categorical_column_with_identity(key='employeeId',num_buckets=5)
+
+In Dataflow, the pipeline is executed on the cloud by a Runner; each step is elastically scaled. 
+
+| 'Top_5' >> beam.transforms.combiners.Top.Of(5, key=lambda kv: kv[1]) : This command returns
+the top 5 records after doing the combine per key operation, (is_popular.py)
+
+Cloud DataPrep is a fully managed service available from GCP, which lets you explore and transform 
+your data interactively with a minimum amount of code. 
+
+The feature cross provides a way to combine features in a linear model. 
+
+Deep Neural Networks lets you have many layers and since each layers combines the layers before it, 
+DNNs can model the complex dimensional spaces. Feature Crosses helps to bring the non linear inputs
+to a linear learner.    
+
+The weight of a cell is essentially the prediction for that cell. A feature cross memorizes
+the input space. Memorization works when you have lots of data. 
+
+Internally, Tensorflow uses a sparse representation for both one hot encoding and feature crosses
+so it has no problem with this. 
+
+Crossing in Tensorflow is only possible for categorical and discritized columns.
+
+The Number of hash buckets controlls sparcity and collisions. Smaller the has buckets, greater is the 
+collision, i.e., two many combination will fall into the same bucket, while higher hash buckets 
+would mean very sparse matrix and hence lower collision chances. 
+
+The weights in the embedding column are learned from the data. The Model learns how to embed the 
+feature cross in lower-dimensional space. 
+
+Using tf.transform will allow us to carry out feature processing efficiently at scale and on streaming
+data. 
+
+tf.transform uses dataflow only during training but only tensorflow during predictions. 
+
+Analysis in Beam and Transform in Tensorflow. 
+
+tf.transform provides two Ptransforms:
+    - AnalyzeAndTransformDataset: 
+        - Executed in Beam to create the training AnalyzeAndTransformDataset
+        - Ex. Compute min/max/vocab etc using Beam
+    - TransformDataset: Executed in Beam to create the evaluation Dataset. 
+
+The underlying transformations are executed in Tensorflow at prediction time (Scale/vocabulory etc. 
+using Tensorflow). 
+
+The dataset_metadata is used to create a meetadata template 
+

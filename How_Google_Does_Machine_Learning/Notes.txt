@@ -1,0 +1,178 @@
+Dialogueflow has three inherent governing KPIs:
+    - Intent:
+        - Get Opening times
+        - Book a table
+        - Size the group
+    - Context:
+        - It helps in the conversation flow
+        - They are used to pass the parameter values from one intent to the next
+        - Ex. MusicTitle:"Moonlight Sonata"
+    - Entities: 
+        - Objects that our application acts on
+        - The chatbot seeks to extracts entities from the intent in the conversation and works on what to do
+        with those intents
+        - They have values, known as parameters
+        - We need to train dialogueflow with all of the synonymns that references the same entity. 
+
+
+Session data is retained for only 20 mins and then it gets deleted.
+
+Knowledge Connectors embed Q&A-style documents
+
+In general use Intents to handle complex user requests and let knowledge connectors handle simple requests. 
+
+
+### Code for cloud Translate
+
+from googleapiclient.discovery import build
+service = build(serviceName='translate', version='v2', developerKey=APIKEY)
+
+# Use the service
+inputs = ['is it really this easy?', 'amazing technology', 'wow']
+outputs = service.translations().list(source='en', target='fr', q=inputs).execute()
+
+# Print outputs
+for input, output in zip(inputs, outputs['translations']):
+  print("{0} -> {1}".format(input, output['translatedText']))
+
+
+### Code for Cloud Vision API
+import base64
+IMAGE="gs://cloud-training-demos/vision/sign2.jpg"
+vservice = build(serviceName='vision', version='v1', developerKey=APIKEY)
+request = vservice.images().annotate(body={
+        'requests': [{
+                'image': {
+                    'source': {
+                        'gcs_image_uri': IMAGE
+                    }
+                },
+                'features': [{
+                    'type': 'TEXT_DETECTION',
+                    'maxResults': 3,
+                }]
+            }],
+        })
+responses = request.execute(num_retries=3)
+
+foreigntext = responses['responses'][0]['textAnnotations'][0]['description']
+foreignlang = responses['responses'][0]['textAnnotations'][0]['locale']
+
+# Let's output the `foreignlang` and `foreigntext`
+print(foreignlang, foreigntext)
+
+# Translate sign
+inputs=[foreigntext]
+outputs = service.translations().list(source=foreignlang, target='en', q=inputs).execute()
+
+# Print the outputs
+for input, output in zip(inputs, outputs['translations']):
+  print("{0} -> {1}".format(input, output['translatedText']))
+
+
+### Code for Sentiment analysis with Language API
+# Evaluating the sentiment with Google Cloud Natural Language API
+lservice = build(serviceName='language', version='v1beta1', developerKey=APIKEY)
+quotes = [
+  'To succeed, you must have tremendous perseverance, tremendous will.',
+  'It’s not that I’m so smart, it’s just that I stay with problems longer.',
+  'Love is quivering happiness.',
+  'Love is of all passions the strongest, for it attacks simultaneously the head, the heart, and the senses.',
+  'What difference does it make to the dead, the orphans and the homeless, whether the mad destruction is wrought under the name of totalitarianism or in the holy name of liberty or democracy?',
+  'When someone you love dies, and you’re not expecting it, you don’t lose her all at once; you lose her in pieces over a long time — the way the mail stops coming, and her scent fades from the pillows and even from the clothes in her closet and drawers. '
+]
+for quote in quotes:
+# The `documents.analyzeSentiment` method analyzes the sentiment of the provided text.
+  response = lservice.documents().analyzeSentiment(
+    body={
+      'document': {
+         'type': 'PLAIN_TEXT',
+         'content': quote
+      }
+    }).execute()
+  polarity = response['documentSentiment']['polarity']
+  magnitude = response['documentSentiment']['magnitude']
+
+# Lets output the value of each `polarity`, `magnitude` and `quote`
+  print('POLARITY=%s MAGNITUDE=%s for %s' % (polarity, magnitude, quote))
+
+## Code for Speech to Text API
+# Using the Speech API by passing audio file as an argument
+sservice = build(serviceName='speech', version='v1', developerKey=APIKEY)
+# The `speech.recognize` method performs synchronous speech recognition.
+# It receive results after all audio has been sent and processed.
+response = sservice.speech().recognize(
+    body={
+        'config': {
+            'languageCode' : 'en-US',
+            'encoding': 'LINEAR16',
+            'sampleRateHertz': 16000
+        },
+        'audio': {
+            'uri': 'gs://cloud-training-demos/vision/audio.raw'
+            }
+        }).execute()
+
+# Let's output the value of `response`
+print(response)
+
+
+ML Strategy is first and foremost, a data strategy. Simple Model with More Data should be preferred over 
+Fancy ML and Small Data
+
+
+Some DevOps concepts translate directly to MLOps
+  - Continous Integration: 
+      - Check out Code
+      - Complete Task
+      - Validate against Code base
+      - Perform unit testing
+      - Remerge Code
+  - Continous Delivery:
+      - Build
+      - Test
+      - Release
+  - Continous Training
+      - Monitor
+      - Measure
+      - Retrain
+      - Serve
+
+  Stages in Machine Learning:
+    - Prepare Raw Data for Machine Learning Task:
+      - Raw Data
+      - Data Extraction
+      - Data Analysis
+      - Data Preparation
+    - Tune the parameters of the algorithms to get the best results
+      - Model Training
+      - Model Evaluation
+      - Model Validation
+    - Deploy and constantly monitor live performance
+      - Trained Model
+      - Model Serving
+      - Model Registry
+    
+Simple Models on Large Datasets produce better results than complex models on small datasets. 
+
+If the Model's predictive performance is better than the defined baseline, it is ready for deployment. 
+
+The level of automation defines the maturity of the ML Process:
+  Level 0: Build and Deploy Manually
+  Level 1: Automate the Training Process
+  Level 2: Automate Training, Validation and Deployment.
+
+Path to ML: The 5 Phases
+1. Individual Contributor
+2. Delegation
+3. Digitization
+4. Big Data and Analytics
+5. Analytics Machine Learning
+
+ ### Code for AI Notebooks with Big Query:
+from google.cloud import bigquery 
+import pandas as pd
+
+query="SELECT * FROM table a"
+df=bigquery.client().query(query=query).to_dataframe()
+df.head()

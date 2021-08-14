@@ -1,0 +1,109 @@
+Tensorflow uses directed graphs to represent computation for portability.
+
+Tensorflow is written in C++.
+
+TensorFlow Lite provides on-device inference of ML models on mobile devices and is available for a variety of 
+hardware.
+
+Tensorflow contains multiple abstraction layers:
+    - CPU, GPU, TPU, Android: TF runs on different hardware
+    - Core Tensorflow (C++): C++ API is quite low level
+    - Core Tensorflow (Python): Python API gives you full control
+    - tf.losses, tf.metrics, tf.optimizers, etc: Components useful when building custom NN models.
+    - tf.estimator, tf.keras, tf.data: High-level APIs for distributed training.
+
+Cloud AI Platform helps run TF at scale with AI platform. 
+
+tf.constant produces constant tensors while tf.Variable produces tensors that can be modified. 
+
+GradientTape records operations for Automtic Differentiation:
+    - Tensorflow can compute the derivative of a function with respect to any parameter
+    - The computation is recorded with a GradientTape
+    - The Function is expressed with Tensorflow ops only. 
+
+Data Pipeline is a series of Data Processing Steps. 
+
+The tf.data API:
+    - Build Complex input pipelines from simple, resuable pieces
+    - Build pipelines for multiple data types
+    - Handle large amounts of data; perform complx transformations. 
+
+tf.data syntaxes:
+
+
+TRAIN_DATA_URL = "https://storage.googleapis.com/tf-datasets/titanic/train.csv"
+# Downloads a file from a URL if it not already in the cache using `tf.keras.utils.get_file()`.
+train_file_path=tf.keras.utils.get_file(fname="train.csv", origin=TRAIN_DATA_URL)
+
+!head -n 3 {train_file_path} : Display the top n records from the file
+
+
+#The only column you need to identify explicitly is the one with the value that the model is intended to predict.
+LABEL_COLUMN = 'survived'
+LABELS = [0, 1]
+
+# Reads CSV Files into Dataset
+dataset=tf.data.experimental.make_csv_dataset(file_pattern=train_file_path,
+batch_size=5,label_name=LABEL_COLUMN,na_value="?",num_epochs=1,ignore_errors=True)
+
+# Printing the feature values from batch 1 
+for batch, label in raw_train_data.take(1):
+    for key,value in batch.items():
+        print(f"{key:20}:{value.numpy()}")
+##### Output #####
+sex                 :[b'female' b'male' b'male' b'male' b'female']
+age                 :[42. 34. 19. 28. 58.]
+n_siblings_spouses  :[0 0 0 0 0]
+parch               :[0 0 0 0 0]
+fare                :[227.525   6.496   6.75   56.496 146.521]
+class               :[b'First' b'Third' b'Third' b'Third' b'First']
+deck                :[b'unknown' b'unknown' b'unknown' b'unknown' b'B']
+embark_town         :[b'Cherbourg' b'Southampton' b'Queenstown' b'Southampton' b'Cherbourg']
+alone               :[b'y' b'y' b'y' b'y' b'y']
+###################
+
+
+steps_per_epoch=NUM_TRAIN_EXAMPLES // (TRAIN_BATCH_SIZE*NUM_EVALS)
+
+Loss Function Constructor:
+
+def rmse(y_true, y_pred):
+    return tf.sqrt(tf.reduce_mean(tf.square(y_true-y_pred)))
+
+We can then feed this inside the metrics list while doing model.compile
+
+# To show all inputs and outputs TensorInfo for a specific SignatureDef specified by the SignatureDef key in a MetaGraph.
+# EXPORT_PATH is where the model is saved
+
+!saved_model_cli show \
+ --tag_set serve \
+ --signature_def serving_default \
+ --dir {EXPORT_PATH}
+
+ Wide and Deep Learning combines the power of memorization and generalization on one unified machine Learning
+ model. 
+
+ Strength of Keras Functional API: 
+    - Less verbose than using keras.Model subclasses
+    - Validates your model while you are defining it
+    - Your Model is plottable and inspectable
+    - Your Model can be serialized or cloned
+
+Weekness of Keras Functional API:
+    - Does not support dynamic architectures
+    - Sometimes we have to write from scratch and we need to build subclasses, eg., 
+    custom training or inference layers.
+
+Benefits with L1 Regularization:
+    - Action: Fewer coeficients to store/load
+      Impact: Reduce Memory, Model Size 
+    - Action: Fewer multiplications needed
+      Impact: Increase prediction speed
+
+L2 regularization only makes weights small, not zero
+
+Often we do both regularization and early stopping to counteract overfiting. 
+
+The More you drop out, the stronger the regularization. 
+
+
