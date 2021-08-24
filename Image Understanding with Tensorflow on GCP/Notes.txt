@@ -29,8 +29,29 @@ For Transfer Learning:
     - If dataset is small, then do not update the weight of the network, else update the weights
     of the original network. 
 
+Going Deeper Faster:
 
-Going Deeper Faster
+Address Internal Covariate Shift using Batch Normalization. 
+Add shortcut connections to increase network depth
+Take advantage of Tensor Processing Units
+Automate network architecture.
 
-Pre-built models
+Deeper networks takes a lot of time to train and they are very sensitive to hyperparameters.
+
+Batch Normalization scales the weights between layers albeit by keeping a high learning rate. 
+
+TPU configs:
+	- 4 chips/TPU, 2 Cores/chip, 8 GB memory/core, 64 TPUs/pod.
+	- It provides high-speed interconnect
+	- Offers very large matrix multiplication hardware. 
+	- TPUs are mainly intended for Batch Predictions. 
+	- There are specialized instruction set
+	- TPU uses bfloat or dloat32 floating point representation.
+
+
+Pre-built models:
+
+Auto ML and Vision API
+
+Auto ML is for everyone while Cloud Vision API or Cloud Video Intelligence API requires Data Analysts, Data Scientists and Data Engineers
 

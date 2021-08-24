@@ -1,0 +1,77 @@
+Introduction:
+
+The wider our window, the fewer examples our model is going to see.
+
+Working with Sequences:
+
+Recurrent Neural Networks (RNNs):
+
+RNNs solve the variable length problem by representing an entire variable-length sequence to
+representing a single even given what has come before. 
+
+Two Key Ideas for the RNNs:
+    - RNNs learn a compact hidden state that represents the past 
+    - The input to an RNN is a concatenation of the orginal stateless input and the hidden state.
+
+The Model will have one set of parameters, there is only one linear set of weights, one dense set of 
+weights and one tanh set of weights. 
+
+Backpropagation through Time: Updating each parameter using the average of all the partial 
+derivatives of iterations. 
+
+RNNs are powerful extractors. 
+
+Dealing with Longer Sequences (LSTMs):
+
+Converting from Python to Tensorflow Functions:
+python: tf.keras.preprocessing.text.Tokenizer.texts_to_sequences()
+Tensorflow Equivalent: tf.contrib.lookup.index_table_from_file()
+
+python: tf.keras.preprocessing.sequence.pad_sequences()
+Tensorflow: tf.pad() and tf.slice()
+
+Reusable Embeddings:
+
+Matrix Factorization is very complex and expensive. 
+
+Encoder-Decoder Models:
+
+Also known as sequence to Sequence Models. 
+
+tf.nn.sampled_softmax_loss is used to find the probability out of one sentence from a
+thousand sentences. 
+
+The outputs of the encoder becomes the inputs of the first RNN cell of the decoder. 
+
+Four Machine Learning Steps in the Pipeline in encoder-decoder model:
+    - Emded
+    - Encode
+    - Attend
+    - Predict 
+
+With AutoML Translation, we would need to:
+    - Prepare Train and Test Sets
+    - Use Pre-built Model
+    - Evaluate Results
+
+Through Auto ML Translation:
+    - Upload Translated Language Pairs
+    - Train your Model
+    - Evaluate 
+
+Dialogflow is an en end-to-end developer platform for building natural and rich conversational
+experience. It picks up the best answer from all possible answers through 
+intent and entity classifications.
+
+There are three components in Dialogflow:
+    - intent: Action that the user wants to execute. They represent a mapping
+    between what the user says and what action should be taken by a chatbot. They are the verbs
+    in the conversation.
+    - entity: Objects that the user would want to act upon. Nouns found through the conversation.
+    - context: It helps the chatbot keep track (where the user is at the course of the conversation). 
+
+Dialogflow uses training phrases as examples for a AI platform model to match user's queries 
+to the correct intent. The AI platform model checks the query against every intent in the agent,
+gives every intent a score, and the higest scoring intent is matched. If the highest scoring intent
+has a very low score, the fallback intent is matched. 
+
