@@ -1,0 +1,178 @@
+Recommendation Systems Overview:
+
+Content based filtering uses item features to recommend new items similar to what the user 
+has liked in the past. 
+
+Collaborative filtering uses similarities between users and items simultaneously to 
+determine recommendations.
+
+Knowledge based recommender systems use explicit knowledge about the users, items and recommendation
+criteria. 
+
+Deep Neural Networks can be trained to predict ratings based on user and item attributes. 
+
+Recommendation systems are about personalization. 
+
+Content Based Recommendation Systems:
+
+Content based filtering uses item features to recommend new items that are similar to what the user 
+has liked in the past. 
+
+An embedding is a map from our collection of items to some finite dimensional vector space. 
+
+A similarity measure is a metric for items in an embedding space. 
+
+Content Based Recommendation are not useful in expanding the interest domains of new users as it gives
+a zero score for a movie if the user has not seen a movie/product based on that feature space.
+
+Collaborative Filtering Recommender Systems:
+WALS: Weighted Alternating Least Squares. 
+
+Collaborative Filtering learns latent factors and can explore outside user's personal bubble.
+
+Collaborative Filtering recommendations use similarities between items and users simultaneously in
+an embedding space. 
+
+Each user and item is a d-dimensional point within an embedding space. Embeddings can be learned
+from data. 
+
+The factorization splits this matrix into row factors and column factors that are essentially 
+user and item embeddings (U x V^t) which are much smaller. 
+
+Ideally k<(U*V)/(U+V), so that U*K MATMUL K*M has togather less interaction space 
+(U*K+K*M) than U*M has (U*M). Ex. 8*3 MATMUL 3*7 (24+21=45) has less interaction space than 
+(8*7=56) interaction space. 
+
+Alternating Least Squares: Alternately solves U holding V constant and then alternately solves 
+V holding U constant. 
+     - Only works for Least Square Problem
+     - Parrallel
+     - Faster Convergence than SGD
+     - Can easily handle unobserved interaction pairs. 
+
+In Singular Value Decomposition: Unobserved Pairs are given a value of 0. |A-UV^T|^2
+
+In Matrix Factorization (ALS), we are ignoring the missing Values. 
+
+In Weighted Alternating Least Squares (WALS), Instead of merely setting all observed pairs to zero, 
+or ignoring them completely, we assign all interacting pairs which are missing. 
+
+WALS requires the ratings matrix to be really matrix entries, so you will have to map id-strings to be 
+0,1,2... . Hence we must save the mapping to persistent storage because you will need to map input
+values to the mapped values. 
+
+tf.contrib.factorization.WALSMatrixFactorization
+
+Neural Networks for Recommender Systems:
+
+Content Based: 
+    Pros: 
+        - No need for data about other users
+        - Can recommend Niche items
+    Cons: 
+        - Needs Domain Knowledge
+        - Only Safe recommendations
+Collaborative Filtering:
+    Pros:
+        - No Domain knowledge
+        - Serendipity
+        - Great Starting point
+    Cons:
+        - Cold Start, Fresh Items/users
+        - Sparsity
+        - No Context features
+Knowledge Based:
+    Pros:
+        - No Interaction Data Needed
+        - Usually high-fidelity data from user self-reporting
+    Cons:
+        - Need User Data
+        - Need to be careful with privacy concerns
+
+The solution is a Hybrid Approach using the above three approaches.
+
+Content Based Data:
+    - Structured:
+        - Genres
+        - Themes
+        - Actors/Directors Involved
+        - Professional Ratings
+    - Unstructured:
+        - Movie Summary Text
+        - Stills from Movie
+        - Movie Trailer
+        - Professional Reviews
+
+Collaborative Based Data:
+    - Structured:
+        - User Ratings
+        - User views
+        - User Wishlist/ Cart History
+        - User Purchase/ return History
+    - Unstructured:
+        - User Reviews
+        - User Answered Questions
+        - User Submitted Photos
+        - User Submitted Videos
+
+Knowledge Based:
+    - Structured: 
+        - Demographic Information
+        - Location/Country/Language
+        - Genre Preferences
+        - Global Filters
+    - Unstructured:
+        - User "about me" snippets
+
+Context Components: 
+    - Mood at the time
+    - Who else experiencing item with
+    - Where experiencing item
+    - When experiencing item
+    - Special Occassion
+
+There are three types of Context Aware Recommendation Systems:
+    - Contextual Prefiltering
+        - User*Item*Context--->Ratings
+    - Contextual Postfiltering
+    - Contextual Modeling
+
+
+User Item Splitting is about splitting around both dimensions, and blending context into users
+and items. 
+
+Building an End to End Recommender Systems:
+
+Cloud Composer orchestrates automatic workflows. It is a managed Apache Airflow. 
+
+User Apache Airflow DAGs to orchestrate GCP services. 
+
+A Directed Acyclic Graph is a set of tasks and special operators that will allow you to 
+programatacally and periodically schedule cool stuffs to happen. 
+
+Each Airflow environment has a separate webserver and folder in GCS for pipeline DAGs. 
+
+The DAGs folder is simply a GCS bucket where you will load your pipeline code. 
+
+Airflow workflows are written in Python. 
+
+Build health checks directly into your workflow. Use BigqueryCheckOperator to setup 
+automatic SQL-based health checks. 
+
+Use BigQueryIntervalCheckOperator to compare values across time. 
+
+Scheduling Options: Periodic or Trigger Based. 
+
+There are two types of workflow ETL patterns:
+    - Push: Event-Triggered
+    - Pull: Schedule Workflow run
+
+We can use a GCloud Function to create an event based push architecture. 
+
+Cloud Function is trigerred whenever a new file is loaded to a specific GCS bucket. 
+
+We should Monitor and alert based on pipeline status and auto retry in case of failure.
+
+We should try running our DAG manually before scheduling or triggering it. 
+
+

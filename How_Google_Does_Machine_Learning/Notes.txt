@@ -19,8 +19,8 @@ Session data is retained for only 20 mins and then it gets deleted.
 
 Knowledge Connectors embed Q&A-style documents
 
-In general use Intents to handle complex user requests and let knowledge connectors handle simple requests. 
-
+In general use Intents to handle complex user requests and let knowledge connectors 
+handle simple requests. 
 
 ### Code for cloud Translate
 
@@ -117,8 +117,8 @@ response = sservice.speech().recognize(
 print(response)
 
 
-ML Strategy is first and foremost, a data strategy. Simple Model with More Data should be preferred over 
-Fancy ML and Small Data
+ML Strategy is first and foremost, a data strategy. Simple Model with More Data should be preferred 
+over Fancy ML and Small Data
 
 
 Some DevOps concepts translate directly to MLOps

@@ -36,13 +36,13 @@ Shared Configuration Framework and Job Orchestration through Cloud Composer (Man
 and Argo(GKE).
 
 Steps to compose a Workflow in Cloud Composer:
-    -  Define the Ops
+    - Define the Ops
     - Arrange into a DAG
     - Upload the DAG to the environment
     - Explore the DAG Run in Web UI. 
 
 Static Vs Dynamic Training:
-    - Static Training: Trainined Once, offline
+    - Static Training: Trained Once, offline
       Dynamic Training: Add Training Data over Time
     - Static Training: Easy to Build and Test
       Dynamic Training: Engineering is harder. Have to do progressive validation. 
@@ -67,7 +67,6 @@ Dataflow can be used for continous Training:
     - Cloud MLE launched on new data in BigQuery
     - Updated Model is deployed
 
-
 Static Vs Dynamic Serving:
     - Static Serving: Higher Storage Cost
       Dynamic Serving: Lower Storage Cost
@@ -91,7 +90,7 @@ For High Peaked and high Cardinality we would opt for Hybrid Inference approach.
 
 Architecting a Static Serving Model:
     - Change Cloud MLE from Online to batch Prediction Job
-    - Model accepts nd passes keys as input
+    - Model accepts and passes keys as input
     - Write predictions to a data warehouse (eg. BigQuery)
 
 II. Ingesting Data for Cloud Based analytics and ML
@@ -99,7 +98,7 @@ II. Ingesting Data for Cloud Based analytics and ML
 Migration Methods:
   - Where is your data: On-Premise with a Good Network
     Data Transfer Options: Online Transfers
-    Where to store your data: Content Storafe and Delivery- Multi-Regional Cloud Storage
+    Where to store your data: Content Storage and Delivery- Multi-Regional Cloud Storage
   - Where is your data: On-Premise with Bad Network or PB+ of Data
     Data Transfer Options: Transfer Appliances
     Where to store your data: Analytics & Machine Learning- Cloud MLE, BigQuery, Genomics, 
@@ -118,7 +117,6 @@ Appliance can hold upto 1PB. Recommended for data above 60 TB.
 BigQuery Data Transfer Service is a fully managed data import service for Google BigQuery. 
 
 Migrate Hadoop and HDFS to Cloud Dataproc. 
-
 
 III. Designing Adaptable ML Systems
 
@@ -151,8 +149,8 @@ Deeplearning works because datasets are large, but the compute required keeps in
 There are two approaches to Data Parallelism:
 	- Async Parameter: Should be preferred when there are large number of not so powerful or unreliable workers such
 	like clusters of TPUs. Use this approach if we are constrained by I/O.
-	- Sync Allreduce: Fast Devices with strong TPU links, such as fast devices. Better for Multiple GPUs. Use this approach if we are
-	Constrained by Compute Power
+	- Sync Allreduce: Fast Devices with strong TPU links, such as fast devices. Better for Multiple GPUs. 
+  Use this approach if we are Constrained by Compute Power
 
 Reading Data into Tensorflow:
 	- Directly feed from Python (slowest)
@@ -194,7 +192,8 @@ Implementation Options for Serving:
 For Batch Pipelines: 
 	- CMLE Batch > Saved Model > TF Serving  (in terms of fast)
 
-TF Serving is the most maintainable and not as fast. CMLE (Cloud Machine Learning Engine) Batch is the best option for batch prediction.
+TF Serving is the most maintainable and not as fast. CMLE (Cloud Machine Learning Engine) 
+Batch is the best option for batch prediction.
 
 For Streaming Pipleines:
  - SavedModel>CMLE+MicroBatching>CMLE
@@ -205,13 +204,15 @@ Kubernetes minimizes infrastructure management.
 
 Kubeflow enables hybrid machine learning. It is a open source machine learning stack built on Kubernetes. 
 
-In order to build hybrid ML systems that work well on premise and in the cloud, our ML framework needs to support three things:
+In order to build hybrid ML systems that work well on premise and in the cloud, 
+our ML framework needs to support three things:
 	- Composability: 
 	            It is about the ability to compose a bunch of microservices togather. 
 	- Portability: From Experimentation to Training to the Cloud.
 	- Scalability: More Accelarators, CPUs, more disk/networking, more teams, skillsets etc. 
 	
-Kubeflow mission is to make it easy for everyone to Develop, Deploy and Manage portable, distributable ML on kubernetes. 
+Kubeflow mission is to make it easy for everyone to Develop, Deploy and Manage portable, 
+distributable ML on kubernetes. 
 
 Tensorflow Lite:
  - Reduced Code Footprint

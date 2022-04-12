@@ -68,7 +68,6 @@ BigQuery:
     - Geospatial data types amd Functions
     - Foundation for BI and AI 
 
-
 BigQuery is two services in one:
     - Fast SQL Query Engine
     - Managed Storage for Datasets
@@ -143,7 +142,7 @@ Services provided by Cloud Dataflow are:
     - Intelligent Watermarking
     - Auto-Healing
     - Monitoring
-    - Log Collection
+    -   
 
 
 Custom Models in GCP:

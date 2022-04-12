@@ -1,0 +1,401 @@
+Why and When do we need MLOPs:
+
+Operationalizing a model means balancing time, resources and quality throughout the whole system. 
+
+MLOps is a life cycle management discipline for machine learning. 
+
+Continous Integration Consists of:
+    - Checking out the code
+    - Completing the Task
+    - Validation against the code base.
+    - Performing of Unit Testing
+    - Remerge code
+
+Continous Delivery Consists of:
+    - Building
+    - Testing 
+    - Releasing
+
+Continous Training Consists of:
+    - Monitoring
+    - Measuring
+    - Retraining
+    - Serving
+
+Comparision between DevOps and MLOps:
+    - DevOps: Test and Validate Code and Components
+      MLOps: Also test and validate data, data schemas and models
+    - DevOps: Focus on a single software package or service
+      MLOps: Also consider the whole system: the ML training pipelines
+    - DevOps: Deploy code and move to the next Task
+      MLOps: Constantly monitor, retrain and serve the model. 
+
+ML systems can easily build up technical debt. 
+
+Phases of a Machine Learning Project:
+    - Discovery Phase:
+        - Define Business Use Cases
+        - Data Exploration
+    - Is Developing a model for this use case feasible
+        - Select an Algorithm
+    - Development Phase:
+        - Data Pipeline and Feature Engineering
+        - Build ML Model
+        - Evaluate
+        - Present Results
+    ## At this Stage we must iterate on the approach from the discovery phase
+    - Deployment Phase:
+        - Plan for Deployment
+        - Operationalize model
+        - Monitor the Model 
+
+The level of automation defines the maturity of the ML Process:
+    - Level 0: Build and Deploy manually
+    - Level 1: Automate the Training Process
+    - Level 2: Automate training, validation and Deployment
+
+Understanding the Main Kubernetes Components:
+
+Containers are isolated user spaces for running application code. 
+
+An application and its dependencies is called an image.
+
+Container use a varied set of Linux technologies:
+    - Processes
+    - Linux Namespaces
+    - cgroups
+    - Union File Systems.
+
+We can download containerized software from a container registry such as gcr.io
+
+Kubernetes Features:
+    - Supports both stateful and stateless applications
+    - Supports Batch Job and Daemon Tasks
+    - Supports Autoscaling
+    - Have Check on Resource Limits
+    - Provides Extensibility. 
+    - Portability- On Premise and Cloud.
+
+Kubernetes is powerful, but managing the infrastructure is a full-time job. 
+Hence GKE which is a managed service for Kubernetes within Google Cloud. 
+
+GKE features:
+    - Fully managed
+    - Container Optimized OS
+    - Auto Upgrade
+    - Auto Repair
+    - Cluster Scaling
+    - Seamless Integration with Cloud Build and Container Registry
+    - Identity and Access management
+    - Integrated logging and Monitoring
+    - Integrated Networking with VPC
+    - Access to Cloud Console
+
+Compute Options Details:
+    - Compute Engine:
+        - Features: 
+            - Fully Customizable Virtual Machines
+            - Persistent disks and Optional SSDs
+            - Global Load Balancing and Autoscaling(MIGS)
+            - Per Second Billing
+        - Use Cases:
+            - Complete Control over the OS and Virtual Hardware
+            - Well Suited for lift and shift migrations to the Cloud
+            - Most Flexible compute solution, often used when a managed solution is too restrictive. 
+    - App Engine:
+        - Features:
+            - Provides a fully managed, code first platform
+            - Streamlines application deployment and scalability
+            - Provides support for popular programming languages and application runtimes.
+            - Supports Integrated monitoring, logging and diagnostics.
+            - Simplifies Version Control, canary testing and rollbacks
+        - Use Cases:
+            - Websites
+            - Mobile app and gaming backends
+            - RESTful APIs
+    - Google Kubernetes Engine:
+        - Features: 
+            - Fully Managed Kubernetes platform
+            - Supports Cluster Scaling, persistent disks, automated upgrades, and auto node repairs
+            - Built in integration with Google Cloud Services
+            - Provides portability across Hybrid Computing and Multi Cloud Computing. 
+        - Use Cases:
+            - Containerized applications
+            - Cloud Native distributed systems
+            - Hybrid Applications. 
+    - Cloud Run:
+        - Features:
+            - Enables stateless Containers
+            - Abstracts away infrastructure management
+            - Automatically scales up and down
+            - Open API and runtime environment
+        - Use Cases:
+            - Deploy stateless containers that listen for requests or events
+            - Build Applications in any language using any frameworks
+    - Cloud Functions:
+        - Features:
+            - Event driven, serverless compute service. 
+            - Automatic scaling with highly available and fault-tolerant design. 
+            - Charges apply only when your code runs
+            - Triggered based on events in Google Cloud Services, HTTP endpoints and firebase
+        - Use Cases:
+            - Supporting Microservice Architecture
+            - Serverless Application Backend: Mobile & IoT backends and Integration with third-party services and APIs
+            - Intelligent Applications: Virtual Assistant and Chatbots, Video and Image Analysis.
+            
+Kubernetes Objects: Persistent entities representing the state of the Cluster
+
+There are two elements to Kubernetes objects:
+    - Object Spec: Desired state described by us.
+    - Object Status: Current State described by Kubernetes. 
+
+Each object is a certain type or kind as Kubernetes calls them. 
+
+Pods are the smallest deployable kubernetes object. A pod embodies the environmnent where the containers live
+and that environment can accomodate one or more containers. 
+
+Kubernetes assigns each pod a unique IP address. Containers within the same pod can communicate through 
+local host - 127.0.0.1
+
+A pod can also specify a set of storage volumes to be shared among its containers.
+
+Cluster: 
+    - Master : 
+        - Coordinate the entire cluster
+        - KubeAPI Server: Accept commands that View or change the state of the cluster, including launching pods.
+        - etcd: Database of the KubeAPI server's database.
+        - kube-scheduler: Responsible for scheduling pods onto the nodes.
+        - Kube-Controller-manager: Consistently monitors the state of the cluster through Kube API server. Whenever the Current
+        state of the cluster does not match the desired state, the controller would want to make changes to achieve 
+        the desired state.
+        - Kube-cloud-manager:  Manages controllers that interacts with underlying cloud providers. 
+    - Nodes: Run Pods
+        - Kubelet: KubeAPI manager connects a Kubelet when ever it wants to make changes on a node. Kubelet manages a pods 
+        lifecycle including readiness and liveliness probe and reports back to KubeAPI server.
+        - KubeProxy: Maintain Network Connectivity among the pods in a Cluster
+    
+Kubernetes doesn't create nodes. Cluster admins create nodes and add them to kubernetes. GKE manages this by 
+deploying and registering Compute Engine Instances as nodes. 
+
+A node pool is a subset of nodes with in a cluster, that share configuration, such as the amount of memory or the 
+CPU generation. It also provides a easy way to ensure that workloads run on the right hardware within your cluster. 
+
+Nodepool is a GKE feature and not a Kubernetes feature. 
+
+By default, a cluster launches in a single GCP compute zone with n identical nodes as provisioned all in one node 
+pools. 
+
+Regional Cluster have a single API endpoint for the cluster, however its master and nodes are spreadout across 
+multiple compute engine zones within a region. Therefore the applications and management functionalities can 
+withstand the loss of one or more but not all zones. 
+
+By default a regional cluster is spread across three zones, each contains one master and three nodes. 
+
+Regional Or Zonal Cluster cannot be converted to one another. 
+
+Private Clusters consists of Master and Nodes which are hidden from the public. But they can be accessed through 
+Google products through an internal IP address or through Authorized external IP address. 
+
+Nodes can have limited outbound access through private google access, which allows them to communicate with other 
+GCP services. 
+For ex. Nodes can pull container images through container registry without needing external IP addresses. 
+
+Deployment has three different lifecycle state:
+    - Progressing State
+    - Complete State
+    - Failed State
+
+kubectl get deployment [deployment_name] -o yaml>this.yaml :Command to populate the deployment logic of a deployment in a yaml file. 
+
+kubectl scale deployment [deployment_name] --replicas=5 : Manually scale a deployment. 
+
+kubectl autoscale deployment [deployment_name] --min=5 --max=15 --cpu_percent=75
+
+Recreate Strategy is where all the old pods are deleted before new pods are created. This clearly affects the availability of your
+application. 
+
+Kubernetes service is a static IP address that represents a service or a function in your infrastructure. 
+It hides the ephemeral nature of the individual pods. 
+
+A blue green deployment strategy is useful when we would want to deploy a new version of the application, 
+and also ensure that application services remain available while the deployment is updated. 
+The disadvantage is that the resource usage is doubled during the time of deployment. 
+
+Canary Deployment is a strategy where the traffic is gradually shifted to the new version. Here we can minimize 
+the excess usage during the update, and because the rollout is gradual, issues can be identified before they 
+effect all instances of the application. 
+
+Session affinity ensures that all client requests are sent to the same Pod. 
+
+kubectl rollout undo deployment [deployment_name] --to-revision=2(optional): Rollback a deployment. 
+
+kubectl rollout history deployment [deployment_name] --revision=2: Inspect a rollout history. 
+
+By default, the details of the 10 previous replica sets are retained. 
+
+kubectl rollout pause deployment [DEPLOYMENT_NAME] : Pause a deployment temporarily. 
+
+kubectl rollout resume deployment [DEPLOYMENT_NAME]: Resume the latest deployment, which was once paused. 
+
+kubectl rollout status deployment [DEPLOYMENT_NAME] : Monitor the rollout status
+
+Jobs is a Kubernetes object like a deployment. A job creates one or more pods to run a specific tasks reliably. 
+In its simplest form a job will create one pod and track the task completion within that pod. 
+When the task is completed, it will terminate the pod and will report that the job has succesfully finished. 
+For a Job, the desired state of a pod is its completion. 
+
+There are two main ways to define a job: 
+    - Non Parallel: Only create one pod at a time
+    - Parallel: Jobs will have a parralellism value defined, where multiple pods are scheduled to run on the 
+    same time. They are defined for tasks which must be completed for more than once. 
+
+Restart Policies which can be used for jobs are:
+    - Never: If a pod fails, it is not restarted, but another pod is started. 
+    - OnFailure: The pod remains on the node, and the container is restarted. 
+
+Backofflimit in a job specifies the number of retries before a job is considered to have failed entirely. 
+Default is 6. 
+
+Parrallel Jobs make multiple pods work on the same task at the same time. 
+
+There are two types of Parallel Jobs:
+    - Fix time completion count 
+    - Process work queue
+
+In a worker queue parallel job, each pods work on several items queue, and exits when there are no more items. 
+
+kubectl scale job [JOB_NAME] --replicas [VALUE] : Scaling a job. 
+
+ActiveDeadlineSeconds: Set an active deadline period for the job to finish. The deadline count starts when the job 
+starts. Post the deadline deadline exceeded limits. 
+
+kubectl delete job [JOB_NAME] --cascade=false: If we want to retain job pods during deletion. 
+Else remove --cascade parameter. 
+
+CronJobs is a Kubernetes object that creates job on a repeatable manner to define schedule. 
+
+StartingDeadlineSeconds: Instead of looking at the number of failed attempts to run the jobs since it had last 
+successully run, it defines the window of time to sum the number of failed attempts. 
+
+ConcurrencyPolicy: To decide if we want to execute more than one job concurrently. 
+    - Forbid
+    - Allow
+    - Replace
+
+suspend: We can stop execution of individual job by a cronjob by setting the suspend property to True
+
+Introduction to AI platform Pipelines:
+
+Few Common AI Problems:
+    - Deployment: Infrastructure is brittle, hard to productionize, and breaks between cloud and on-premises.
+      Solutions: Kubeflow/TFX
+    - Talent: Machine Learning Expertise is Scarce
+      Solutions: Resuable Pipelines
+    - Collaboration: Existing Solutions are difficult to find and leverage
+      Solutions: Ecosystems. 
+
+Current Process for Building an MLOps pipeline:
+    - Setup a Google Kubernetes Engine (GKE) cluster. 
+    - Create a Cloud Storage Bucket for storing data
+    - Install Kubeflow Pipelines
+    - Setup port forwarding
+    - Create a process to share the pipeline with your team. 
+
+AI Platform Pipelines:
+    - One Click installations via the Google Cloud Console
+    - Enterprise features for running MLOps workloads
+    - Seamless integration with Google Cloud Managed Services
+    - Prebuilt pipeline components (pipeline steps) for ML workflows
+    - Easy customization for new components
+
+Two major parts of an AI Platform pipeline instance:
+    - Enterprise-ready infrastructure: For Deploying and running ML workflows with tight integration with 
+    Google Cloud Services
+    - Pipeline Ecosystem: For Building, debugging, and sharing the pipeline and components. 
+
+AI Platform Pipelines Implementation Strategy:
+    - Kubeflow Pipelines SDK
+        - Lower level ML framework-agnostic Implementation
+        - Enables direct Control of Kubernetes resource control
+        - Simple sharing of containerized components
+        - Use it for fully custom pipelines
+    - Tensorflow Extended (TFX) SDK
+        - Higher Level Abstraction
+        - Prescriptive but customizable components with pre-defined ML types
+        - Brings Google best practices for robust/scalable ML workloads
+        - Use it for E2E TF-based pipeline with customizable data preprocessing and training code. 
+
+AI Platform enables:
+    - Workflow Orchestration:
+    - Rapid, reliable, repeatable experimentation
+    - Share, re-use and compose a new pipeline
+
+
+AI Hub and Pipelines: Fast and simple adoption of AI
+1. Search and Discover: Find best-of-breed pipelines on the hub that leverage cloud AI solutions 
+(AutoML, GPU, TPU, CMLE, etc)
+2. Deploy: Quick 1-click implementation of ML pipelines onto Google Cloud/GKE
+3. Customize: Experiment and adjust out-of-the-box pipelines to custom use cases via pipelines UI
+4. Run in Production: Deploy customized pipelines in production on Google Cloud. 
+5. Publish: Upload and share pipelines that run best on Google Cloud with your org or publicly. 
+
+
+Training, Tuning and Serving on AI Platform:
+
+ML model building process:
+    - Create the Dataset
+    - Build the Model
+    - Operationalize the Model
+
+Building and Operationalizing the model:
+    - train.py: Implement a tunable training application
+    - Dockerfile: Package your application    
+    - config.yaml: Configure and start an AI Platform Job
+
+The field to hash on for Farm_Fingerprint function in GCP Bigquery must:
+    - Not be correlated to label (otherwise we will leave valuable information information out of the training set)
+    - Granular enough for our desired module split (ex. Day and Not year)
+
+One Possible option is to concatenate all the fields as a JSON string and hash on that. 
+MOD(ABS(FARM_FINGERPRINT(TO_JSON_STRING(cover))),10) < 'SOME NUMBER'
+
+gcloud builds submit --tag gcr.io/$PROJECT/$IMAGE:$TAG $TRAINING_APP_FOLDER: Build a Dockerfile residing in the 
+$TRAINING_APP_FOLDER which also contains the train.py file. 
+
+
+Kubeflow Pipelines on AI Platform:
+
+The ML Process (in a  sequential order):
+    - Data Store
+    - Data Extraction and Analysis
+    - Data Preparation
+    - Model Training
+    - Model Evaluation and Validation
+    - Trained Model 
+
+Kubeflow Pipelines enable:
+    - ML Workflow Orchestration
+    - Share, re-use, and compose
+    - Rapid, reliable experimentation 
+
+Kubeflow Pipelines constitutes of:
+    - Containerized implementations of ML tasks:
+        - Example of ML tasks: Data Import, training, serving and model Evaluation
+        - Containers provide portability, repeatability and encapsulation
+        - A containerized task can invoke other services, such as AI platform, Dataflow or Dataproc
+    - Specification of sequence of steps which can be specified via Python SDK
+    - Input Paramaters: 
+        - A "Job" is a pipeline invoked w/specific parameters. 
+
+There are three main types of Kubeflow components:
+    - Prebuilt Components:
+        - Just load the component from its description and compose
+    - Lightweight Python Components:
+        - Implement the component code
+    - Custom Components:
+        - Implement the component code
+        - Package it into a Docker Container
+        - Write the component description
+
+
+

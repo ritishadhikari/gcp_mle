@@ -7,7 +7,7 @@ Working with Sequences:
 Recurrent Neural Networks (RNNs):
 
 RNNs solve the variable length problem by representing an entire variable-length sequence to
-representing a single even given what has come before. 
+representing a single event given what has come before. 
 
 Two Key Ideas for the RNNs:
     - RNNs learn a compact hidden state that represents the past 
@@ -38,7 +38,7 @@ Encoder-Decoder Models:
 
 Also known as sequence to Sequence Models. 
 
-tf.nn.sampled_softmax_loss is used to find the probability out of one sentence from a
+tf.nn.sampled_softmax++++++++_loss is used to find the probability out of one sentence from a
 thousand sentences. 
 
 The outputs of the encoder becomes the inputs of the first RNN cell of the decoder. 

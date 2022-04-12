@@ -1,0 +1,18 @@
+for step in ['train', 'eval']:
+    if step == 'train':
+      selquery = 'SELECT * FROM ({}) WHERE ABS(MOD(hashmonth, 4)) < 3'.format(query)
+    else:
+      selquery = 'SELECT * FROM ({}) WHERE ABS(MOD(hashmonth, 4)) = 3'.format(query)
+
+    (p 
+     | '{}_read'.format(step) >> beam.io.Read(beam.io.BigQuerySource(query = selquery, use_standard_sql = True))
+     | '{}_csv'.format(step) >> beam.FlatMap(to_csv)
+     | '{}_out'.format(step) >> beam.io.Write(beam.io.WriteToText(os.path.join(OUTPUT_DIR, '{}.csv'.format(step))))
+    )
+
+  job = p.run()
+  if in_test_mode:
+    job.wait_until_finish()
+    print("Done!")
+    
+preprocess(in_test_mode = False)

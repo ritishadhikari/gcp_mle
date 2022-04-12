@@ -38,7 +38,7 @@ so it has no problem with this.
 
 Crossing in Tensorflow is only possible for categorical and discritized columns.
 
-The Number of hash buckets controlls sparcity and collisions. Smaller the has buckets, greater is the 
+The Number of hash buckets controlls sparcity and collisions. Smaller the hash buckets, greater is the 
 collision, i.e., two many combination will fall into the same bucket, while higher hash buckets 
 would mean very sparse matrix and hence lower collision chances. 
 

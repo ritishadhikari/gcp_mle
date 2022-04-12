@@ -1,0 +1,27 @@
+Cloud ML Engine contains the Following:
+    - tf.estimator - High Level API for distributed training
+    - tf.layers, tf.losses, tf.metrics: Components useful when building custom NN models
+    - Core Tensorflow (Python): Python API giving full control
+    - Core Tensorflow (C++) : Quite Low Level
+    - CPU, GPU, TPU, Android: TF runs on different hardware. 
+
+To build effective ML, you need:
+    - Big Data
+    - Feature Engineer
+    - Model Architectures
+
+As your data size increasing, batching and distribution become important. 
+
+Cloud ML Engine gives you the ability to carry out ML that is repeatable, scalable and tuned. 
+
+Developing ML model software on the entire dataset can be expenssive. We would want to develop the 
+model on a smaller sample. So we must develop our tensorflow code on a small subset, then scale it out
+to the cloud. 
+
+The Training Loop saves the model into a checkpoint. The evaluation loop restores the model from 
+the checkpoint and uses it to evaluate the model. 
+
+When we checkpoint, we ensure that the model we save is complete, and can be used for prediction. 
+
+DNNs are good for dense and highly corrrelated outputs, while Linear models are better at handling
+sparse, independent features. 

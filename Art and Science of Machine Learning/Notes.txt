@@ -14,7 +14,6 @@ training will bounce around. If too large, then the training will take a very lo
 
 Adam and ftrl are the default learning rates. 
 
-
 Hyperparameter Tuning:
 
 At a low learning rate, improvement is linear but we often don't get the best possible performance. 
@@ -27,7 +26,7 @@ A Pinch of Science:
 Feature Crosses lead to lots of input nodes, so having zero weights is especially important. Hence 
 comes the need for regularization.
 
-LO-norm whic is the count of non-zero weights is an NP-hard, non-convex optimization problem. There
+LO-norm whicH is the count of non-zero weights is an NP-hard, non-convex optimization problem. There
 will be many local peaks and valleys. We preety much have to start with lots and lots of starting
 points of gradient decent making an NPHard problem to solve completely. 
 
@@ -40,7 +39,7 @@ features will have high correlation among each other and L1 regularization will 
 while discarding the others. While L2 regularization will keep both features and keep their
 weight magnitudes small. 
 
-Elastic nets combine the feeature selection of L1 regularization with the the generalizability
+Elastic nets combine the feature selection of L1 regularization with the the generalizability
 of L2 regularization. The only tradeoff is that there are two and not just one hyperparameters to
 tune for the two different lambda regularization parameters.
 
@@ -58,11 +57,9 @@ A good Advice if my model is experiencing exploding gradients are:
     - Add Gradient Clipping
     - Add Batch Normalization
 
-
-
 For our Classification output, if we have both mutually exclusive labels and probabilities, we should
 use tf.nn.softmax_cross_entropy_with_logits_v2. If the labels are mutually exclusive, but the 
-probabilities aren'tmutually exclusive, we should use tf.nn.sparse_softmax_cross_entropy_with_logits.
+probabilities aren't mutually exclusive, we should use tf.nn.sparse_softmax_cross_entropy_with_logits.
 If our labels aren't mutually exclusive, we should use tf.nn.sigmoid_cross_entropy_with_logits. 
 
 Embeddings:
@@ -107,7 +104,7 @@ embedded_movie=layers.embedding_column(sparse_movie,100)
 Embeddings are feature columns that function like layers. In the following code, we use 3 
 Dimensional Embedding:
 
-sparse_word=fc.cateforical_column_with_vocabulory_list('word',vocabulory_list=engishWords)
+sparse_word=fc.categorical_column_with_vocabulory_list('word',vocabulory_list=engishWords)
 embedded_word=fc.embedding_column(sparse_word,3)
 
 The weights in the embedding layer are learned through backprop just as with other weights. 

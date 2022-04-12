@@ -1,0 +1,185 @@
+A TFX Component implements a machine learning task. They are designed to be modular and extensible. 
+
+Each step of a TFX Pipeline or TFX Components produces and consumes structured data representation
+called artifacts. 
+
+Subsequent components in our workflow may use these artifacts as inputs. 
+
+In this way TFX lets you transform data during continous execution of our pipeline. 
+
+Components are composed of five elements:
+    - Component Specification (config.proto): A configuration protocol buffer defines how
+    components communicate with each other via input and output artifact channels and runtime
+    parameters. 
+    - Component Driver: A driver coordinates job execution. 
+    - Component Executor: Code to perform ML workflow step such as data preprocessing or 
+    Tensorflow model training. 
+    - Component Publisher: Updates ML Metadata store. 
+    - Component Interface: Packages component specification and executor for use in pipeline. 
+
+TFX Components at runtime: 
+    - Driver reads the component specification for paramaters and artifacts and retrieves input
+    artifacts from the metadata store for the component. 
+    - Executor performs executions on the retrieved input artifacts and generates the output 
+    artifacts. 
+    - Publisher uses the component specification and executor results to store the component's
+    output artifacts in the metadata store. 
+
+A TFX pipeline is a sequence of components connected by channels in a directed acyclic graph
+(DAG) of artifact dependencies. 
+
+A TFX channel is an abstract concept, that connects components data producers and data consumers. 
+
+For ex. Transformed Data is an artifact, and it depends on the training data artifact to ingest 
+into your pipeline, and it serves as input during model training. 
+
+TFX pipelines use ML Metadata for artifact management and an Orchestrator for sequential
+component execution.
+
+The ML Metadata library stores the metadata in a relational backend databases like mysql, sqlite, 
+etc. 
+
+TFX Pipelines are task aware, which means they can be authored on a script or a notebook to be 
+run by a user manually as task. A task can be an entire pipeline run or a partial pipeline
+run of an individual component. 
+
+TFX horizontal layers coordinate pipeline components 
+
+There are four horizontal layers to be aware of:
+    - Integrated Frontend: manages pipeline job management, monitoring, 
+    debugging and data/model/evaluation visualization. 
+    - Orchestrator: Run pipelines using shared code and configurations to distribute 
+    component executor code. 
+    -  Shared Libraries and Protobufs: Control Pipeline garbage collection, data representations, 
+    and data access controls. 
+    - Pipeline Storage: Artifact storage and ML metadata for pipeline run and artifact metadata. 
+
+TFX Standard Components: Compose ML Pipelines faster with reusable components pre-configured 
+with production best practices. 
+
+TFX Standard Components for Data Management:
+    - Examplegen: 
+        This component is the entrypoint to your pipeline that ingests data. As inputs
+        it supports out of the box ingestion such as CSV, TFRecords, Avro and Parquet. 
+        As outputs it produces tfexamples or tfsequence examples which are highly efficient 
+        and perfomant dataset representations that can be read consistently by downstream components. 
+        A span is a grouping of training examples. 
+    - Statisticsgen:
+        Performs a complete pass over your data using Apache Beam in the tensorflow data validation
+        library. 
+    - Example validator pipeline component identifies anamolies in train, test and dev data. 
+    - Transform: Performs feature engineering on tfexamples data artifacts. Brings consistently
+      feature engineering during training and serving time to benefit machine learning project. 
+      Some of the most common transformations includes:
+        - Converting spase categorical features into dense embedding feature,
+        - Automatically generating vocabulory 
+        - Normalizing Continous numerical features
+        - Bucketizing Continous Numerical features into discrete continous features
+ 
+ TFX Standard Model Components:
+    - trainer:
+        Trains a tensorflow Model. 
+        Inputs - A transformed tfx data artifact, Transformed Graph
+        poduced by the transformed component, A data schema artifact from the schemagen component,
+        a tensorflow modelling code, typically defined in a model.py file. 
+        Outputs - Atleast one model, for inference and serving in a tensorflow saved model 
+        format. Optionally another model - evalsavedmodel
+        Trainer brings standardization to your machine learning projects. 
+    - tuner:
+        The newest tfx component and makes extensive use of the python keras tuner api
+        for tuning hyperparameters. 
+        Inputs - Transformed Data and Transformed Graph artifacts. 
+        Outputs - Hyperparameter artifacts
+        Supports KerasTuner library for hyperparameter tuning and integration with Tensorflow Trainer
+        Can use Google Cloud AI Platform optimizer for distributed tuning. 
+    - Evaluator: 
+        For Model Evaluation. 
+        Inputs - Model created by the trainer and the original input data artifacts. 
+        Outputs - Evaluation Metrics Artifact containing Configurable model metric slices, and 
+        Model Blessings artifacts that indicates whether the models performance was higher than 
+        the configurable thresholds and whether it is ready for production. 
+        Brings Standardization to ML projects for easier sharing and reuse. 
+        Your pipeline will only graduate the model to production only when it has exceeded the 
+        performance of previous models. 
+    - InfraValidator: 
+        Early warning layer before pushing the model to production. It validates the model
+        in the actual serving infrastructure. 
+        Inputs - Saved Model Artifacts from the trainer component
+        Outputs - Infer Validation Artifact just like a Blessed Validator. 
+        It focusses on the compatibility on the model server binary such as tensorflow
+        serving and the model ready to deploy. 
+        Ensures that only top performing models are graduated to production. 
+    - pusher:
+        Push a validated Model to a deployable target during model training or retraining. 
+        It relies on one or more blessings from other validation components as input to decide
+        whether to push the model. 
+        Targets for Push can be TensorflowLite, TensorflowJS, TensorflowServing
+        Brings the benefits of production gatekeeper to the tfx pipeline and ensures that only the 
+        best performing models that are mechanically sound, make it to production. 
+    - BulkInferer:
+        Perform batch inferencing on unlabelled TFX examples. Typically deployed after an evaluator 
+        component to perform inference with a validated model or after a trainer component to 
+        directly perform inference on an exported model. 
+        Inputs - A trained tensorflow model from the trainer component, optionally a model
+        blessing artifacts from the evaluator component, InputData tfexample artifact from the 
+        examplegen component (unlabelled examples in a test data partition)
+        Outputs - Inference Result Proto containing original features and prediction results. 
+
+Pipeline Nodes: Special Purpose Classes for performing advanced metadata operations such as 
+importing external artifacts into ML Metadata, performing queries of current metadata based on 
+artifact properties and their history. 
+    - Importer Node: Imports an external data object into ML Metadata. 
+    - Resolver Node: Performs metadata queries. Required if performing model validation
+    in addition to evaluation. 
+
+TFX Libraries: 
+Data Ingestion:
+    - ExampleGen
+Tensorflow Data Validation
+    - StatisticsGen
+    - SchemaGen
+    - Example Validator
+Tensorflow Transform
+    - Transform
+Estimator or Keras Model:
+    - Trainer
+    - Tuner
+Tensorflow Model Analysis:
+    - Evaluator
+    - InfraValidator
+Validation Outcomes:
+    - Pusher
+Tensorflow Serving:
+    - Model Server
+    - Bulk Inferer
+
+
+Tensorflow Transform Library for preprocessing data and feature engineering with Tensorflow:
+    - Analyzers: Max, Min, Mean, Sum, Var, Covariance, Quantiles, Size, Vocabulory, PCA
+    - Mappers: Bucketize, apply_buckets, hash_string, ngrams, scale_0+1, scale_z_score, 
+    scale_max_min, tfidf, compute_and_apply_vocabulory
+
+Tensorflow Model Analysis (TFMA) library for Model Evaluation. It uses Apache Beam for scaling 
+model evaluation. TFMA integrated Fairness Indicators for responsible AI development. 
+
+Flexible runtimes run components in sequential order using orchestration systems such
+as Airflow, Kubeflow or Beam. 
+
+The tfx_dsl library is the horizontal layer of abstraction to extend or build new TFX beam pipeline
+operations which can interact with ML metadata and cloud storage for metadata operation. 
+
+The tfx_dsl is converting your tfx pipeline code into a kubeflow pipeline through the kubeflow
+pipeline's dsl. 
+
+TFX Pipeline Design Patterns:
+    - config.py: Configures the default values for the environment-specific settings and the 
+    default value for the pipeline runtime parameters. 
+    - Pipeline.py: Contains the TFX Domain Specific Language (DSL) that defines the workflow 
+    implemented by the pipeline. 
+    - runner.py: Configures and executes KubeflowDagRunner. At compile time, the 
+    KubeflowDagRunner.run() method converts the TFX DSL into the pipeline package in the 
+    Kubeflow Argo format for execution on a Kubernetes Cluster. 
+    - model.py: Implements the training logic for the Train Component. 
+    - features.py: Contains feature definitions common across preprocessing.py and model.py
+    - preprocessing.py: Implements the data preprocessing logic for the Transform component. 
+     

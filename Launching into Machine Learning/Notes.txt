@@ -12,10 +12,10 @@ Ways to Improve Data Quality:
     - Convert Categorical Columns to "one-hot encodings"
 
 
-For Regression Problems, the loss function is the mean squared error. The goal is to reduce the loss as much as 
-possible, so we need to find a way to minimize the loss with respect to the weights. 
+For Regression Problems, the loss function is the mean squared error. The goal is to reduce the 
+loss as much as possible, so we need to find a way to minimize the loss with respect to the weights. 
 
-We can visualize a Decision Tree Graph, throught he following commands:
+We can visualize a Decision Tree Graph, through he following commands:
 
 # Here we are importing some built-in visualization functionalities for decision trees
 from IPython.display import Image  
@@ -29,10 +29,30 @@ export_graphviz(decision_tree=dtree, out_file=dot_data,feature_names=features,fi
 graph = pydot.graph_from_dot_data(s=dot_data.getvalue())  
 Image(graph[0].create_png())  
 
+A Parameter of an ML Model, is changed during model training, 
+while Hyper-parameters are set before training. 
+
+A typical loss curve follws a big drop in loss metrics early on (big steps) 
+while many smaller steps as we get closer to a minima. 
+
+Model Training Involves the following Steps:
+    - Calculate Derivative
+    - Take a Step
+    - Check loss
+
+Training on the full dataset every step is expensive. Minibatching reduces cost while preserving quality. 
+
+Performance Metrics and Loss Functions:
+    Loss Functions:
+        - It is evaluated during training times 
+        - It is Harder to Understand
+        - It is indirectly connected to Business Goals 
+    Performance Metrics: 
+        - It is evaluated after training
+        - It is easier to Understand
+        - Directly connected to Business Goals
 
 
-A Parameter of an ML Model, is changed during model training, while Hyper-parameters are set before training. 
 
-A typical loss curve follws a big drop in loss metrics early on (big steps) while many smaller steps as we get
-closer to a minima. 
+     
 

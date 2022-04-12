@@ -1,6 +1,5 @@
 Introduction
 
-
 Linear and DNN models
 The ideal decision boundary of cat vs non cat is defined by the relationship between pixels. 
 
@@ -48,10 +47,10 @@ TPU configs:
 	- There are specialized instruction set
 	- TPU uses bfloat or dloat32 floating point representation.
 
-
 Pre-built models:
 
 Auto ML and Vision API
 
-Auto ML is for everyone while Cloud Vision API or Cloud Video Intelligence API requires Data Analysts, Data Scientists and Data Engineers
+Auto ML is for everyone while Cloud Vision API or Cloud Video Intelligence API requires Data Analysts, 
+Data Scientists and Data Engineers
 
