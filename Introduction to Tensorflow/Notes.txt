@@ -2,8 +2,8 @@ Tensorflow uses directed graphs to represent computation for portability.
 
 Tensorflow is written in C++.
 
-TensorFlow Lite provides on-device inference of ML models on mobile devices and is available for a variety of 
-hardware.
+TensorFlow Lite provides on-device inference of ML models on mobile devices and is available
+for a variety of hardware.
 
 Tensorflow contains multiple abstraction layers:
     - CPU, GPU, TPU, Android: TF runs on different hardware
@@ -26,7 +26,7 @@ Data Pipeline is a series of Data Processing Steps.
 The tf.data API:
     - Build Complex input pipelines from simple, resuable pieces
     - Build pipelines for multiple data types
-    - Handle large amounts of data; perform complx transformations. 
+    - Handle large amounts of data; perform complex transformations. 
 
 tf.data syntaxes:
 
@@ -72,7 +72,8 @@ def rmse(y_true, y_pred):
 
 We can then feed this inside the metrics list while doing model.compile
 
-# To show all inputs and outputs TensorInfo for a specific SignatureDef specified by the SignatureDef key in a MetaGraph.
+# To show all inputs and outputs TensorInfo for a specific SignatureDef specified by the 
+SignatureDef key in a MetaGraph.
 # EXPORT_PATH is where the model is saved
 
 !saved_model_cli show \
@@ -80,8 +81,8 @@ We can then feed this inside the metrics list while doing model.compile
  --signature_def serving_default \
  --dir {EXPORT_PATH}
 
- Wide and Deep Learning combines the power of memorization and generalization on one unified machine Learning
- model. 
+ Wide and Deep Learning combines the power of memorization and generalization on one unified 
+ machine Learning model. 
 
  Strength of Keras Functional API: 
     - Less verbose than using keras.Model subclasses

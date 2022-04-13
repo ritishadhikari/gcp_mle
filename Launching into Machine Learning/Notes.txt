@@ -32,7 +32,7 @@ Image(graph[0].create_png())
 A Parameter of an ML Model, is changed during model training, 
 while Hyper-parameters are set before training. 
 
-A typical loss curve follws a big drop in loss metrics early on (big steps) 
+A typical loss curve follows a big drop in loss metrics early on (big steps) 
 while many smaller steps as we get closer to a minima. 
 
 Model Training Involves the following Steps:

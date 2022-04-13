@@ -83,7 +83,7 @@ quotes = [
 ]
 for quote in quotes:
 # The `documents.analyzeSentiment` method analyzes the sentiment of the provided text.
-  response = lservice.documents().analyzeSentiment(
+  response = service.documents().analyzeSentiment(
     body={
       'document': {
          'type': 'PLAIN_TEXT',
